@@ -1,13 +1,14 @@
-import java.awt.Color;
+import ui.MyCustomButton;
+import ui.RoundedButtonUI;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
 
 public class MyWindow extends JFrame implements ActionListener {
 
@@ -22,16 +23,49 @@ public class MyWindow extends JFrame implements ActionListener {
     private final JLabel lSimbolo;
     public JLabel lResultado = new JLabel("Resultado: SR");
     private final JTextField num1Txt;
-    Operations objOperaciones;
+    private final Operations objOperaciones;
     String nameOfTheWindow;
     private double result;
+    private Color operationsColor;
+    private Color calculatorBackground;
+    private Color numbersColor;
+    private Color backgroundNumbersButtons;
+    private JPanel panelNumbers, panelOperations, panelMessages, panelBackground;
+    private MyCustomButton btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8,btn9;
+    private Font numberFont = new Font("Arial",Font.PLAIN,22);
 
     MyWindow(Operations objOperaciones, String nameOfTheWindow) throws RemoteException {
+        operationsColor = new Color(0, 93, 178);
+        calculatorBackground = new Color(19, 29, 37);
+        numbersColor = new Color(41, 157, 238);
+        backgroundNumbersButtons = new Color(34, 49, 63);
         this.objOperaciones = objOperaciones;
         this.nameOfTheWindow = nameOfTheWindow;
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        JLabel lTitulo = new JLabel("Calculadora");
-        lTitulo.setBounds(20, 10, 600, 32);
+
+        btn1 = new MyCustomButton(backgroundNumbersButtons,numbersColor,"1");
+        btn2 = new MyCustomButton(backgroundNumbersButtons,numbersColor,"2");
+        btn3 = new MyCustomButton(backgroundNumbersButtons,numbersColor,"3");
+        btn4 = new MyCustomButton(backgroundNumbersButtons,numbersColor,"4");
+        btn5 = new MyCustomButton(backgroundNumbersButtons,numbersColor,"5");
+        btn6 = new MyCustomButton(backgroundNumbersButtons,numbersColor,"6");
+        btn7 = new MyCustomButton(backgroundNumbersButtons,numbersColor,"7");
+        btn8 = new MyCustomButton(backgroundNumbersButtons,numbersColor,"8");
+        btn9 = new MyCustomButton(backgroundNumbersButtons,numbersColor,"9");
+
+        panelBackground = new JPanel();
+        panelNumbers = new JPanel();
+        panelMessages = new JPanel();
+        panelOperations = new JPanel();
+
+        panelBackground.setLayout(null);
+        panelBackground.setBackground(calculatorBackground);
+        panelBackground.setBounds(0,0,350,500);
+
+        panelNumbers.setLayout(new GridLayout(3,3,10,10));
+        panelNumbers.setBounds(20,200,200,200);
+        panelNumbers.setBackground(calculatorBackground);
+
         lError = new JLabel("");
         lError.setBounds(20, 150, 600, 32);
         lError.setForeground(Color.red);
@@ -69,26 +103,22 @@ public class MyWindow extends JFrame implements ActionListener {
         bLimpiar.addActionListener(this);
         this.setLayout(null);
         this.setTitle("Calculadora "+nameOfTheWindow);
-        this.setSize(600, 500);
+        this.setSize(350, 500);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
-        this.add(bSuma);
-        this.add(btnResult);
-        this.add(bResta);
-        this.add(bMultiplicacion);
-        this.add(bDivision);
-        this.add(bModulo);
-        this.add(bCuadrado);
-        this.add(bLimpiar);
-        this.add(num1Txt);
-        this.add(lTitulo);
-        this.add(lResultado);
-        this.add(lOperaciones);
-        this.add(lNum1);
-        this.add(lSimbolo);
-        this.add(lError);
+
+        add(panelBackground);
+        panelBackground.add(panelNumbers);
+        panelNumbers.add(btn1);
+        panelNumbers.add(btn2);
+        panelNumbers.add(btn3);
+        panelNumbers.add(btn4);
+        panelNumbers.add(btn5);
+        panelNumbers.add(btn6);
+        panelNumbers.add(btn7);
+        panelNumbers.add(btn8);
+        panelNumbers.add(btn9);
         //Registra la ventana para saber cual es el numero de cual
-        objOperaciones.registerWindow(this);
         btnResult.addActionListener(e -> {
             try {
                 result = objOperaciones.getResult(nameOfTheWindow);
@@ -98,6 +128,7 @@ public class MyWindow extends JFrame implements ActionListener {
             }
         });
         serviceForGettingTheCurrentNumber();
+        objOperaciones.registerWindow(this);
         //serviceForUpdateTheResult();
     }
 
