@@ -88,11 +88,12 @@ public class MyWindow extends JFrame implements ActionListener {
         btnCleanFields.setBounds(20, 110, 60, 60);
         btnCleanFields.addActionListener(this);
 
-        btnDelete = new MyCustomButton(deleteColorBackground, deleteColorText,"Del");
+        btnDelete = new MyCustomButton(deleteColorBackground, deleteColorText,"");
         btnDelete.setBounds(90,110,60,60);
         btnDelete.addActionListener(this);
-
-
+        ImageIcon imageIcon = new ImageIcon("src/arrow2.png");
+        Image image = imageIcon.getImage().getScaledInstance(38,38,Image.SCALE_SMOOTH);
+        btnDelete.setIcon(new ImageIcon(image));
         JPanel panelBackground = new JPanel();
         JPanel panelNumbers = new JPanel();
 
@@ -263,6 +264,14 @@ public class MyWindow extends JFrame implements ActionListener {
         }
         if (e.getSource() == btnPunto){
             txtNumberInput.setText(txtNumberInput.getText() + ".");
+        }
+        if (e.getSource() == btnDelete){
+            if (txtNumberInput.getText().length() > 0){
+                String input = txtNumberInput.getText();
+                StringBuilder sb = new StringBuilder(input);
+                sb.deleteCharAt(sb.length()-1);
+                txtNumberInput.setText(sb.toString());
+            }
         }
     }
 
